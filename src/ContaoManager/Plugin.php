@@ -19,7 +19,7 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use ExAkt\ContaoStyleBricksBundle\ContaoHeaderModuleBundle;
-//use Symfony\Component\Config\Loader\LoaderInterface;
+
 
 class Plugin implements BundlePluginInterface, ConfigPluginInterface
 {
@@ -32,5 +32,16 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface
             BundleConfig::create(ContaoHeaderModuleBundle::class)
                 ->setLoadAfter([ContaoCoreBundle::class]),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
+    {
+        return $resolver
+            ->resolve(__DIR__.'/../../config/routes.yaml')
+            ->load(__DIR__.'/../../config/routes.yaml')
+            ;
     }
 }
