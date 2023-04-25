@@ -17,11 +17,13 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
-use Contao\ManagerPlugin\Config\ConfigPluginInterface;
-use ExAkt\ContaoStyleBricksBundle\ContaoHeaderModuleBundle;
+use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use ExAkt\ContaoHeaderModuleBundle\ExAktContaoHeaderModuleBundle;
+use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 
-class Plugin implements BundlePluginInterface, ConfigPluginInterface
+class Plugin implements BundlePluginInterface, RoutingPluginInterface
 {
     /**
      * {@inheritdoc}
@@ -29,19 +31,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create(ContaoHeaderModuleBundle::class)
+            BundleConfig::create(ExAktContaoHeaderModuleBundle::class)
                 ->setLoadAfter([ContaoCoreBundle::class]),
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
-        return $resolver
-            ->resolve(__DIR__.'/../../config/routes.yaml')
-            ->load(__DIR__.'/../../config/routes.yaml')
-            ;
+        $file = __DIR__.'/../../config/routes.yaml';
+
+        return $resolver->resolve($file)->load($file);
     }
 }
